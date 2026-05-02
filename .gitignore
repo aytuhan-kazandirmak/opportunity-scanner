@@ -35,8 +35,9 @@ yarn-error.log*
 
 
 .claude/
-claude.md
+CLAUDE.md
 agent.md
+.github/
 
 # vercel
 .vercel
