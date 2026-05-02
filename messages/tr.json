@@ -1,5 +1,5 @@
 {
-  "report.title": "Fırsat Taraması",
+  "report.title": "Opportunity Scan",
   "report.noOpportunities": "Bu taramada fırsat kaydedilmedi.",
   "report.opportunities.count": "{count} fırsat",
   "report.verified.count": "{count} doğrulandı",
@@ -26,5 +26,5 @@
   "reports.description": "AI ve yazılım pazar açıklarının, yeni GitHub projelerinin ve solo yapılabilir SaaS fırsatlarının günlük analizi.",
   "reports.count": "{count} rapor",
   "reports.noReports": "Henüz rapor yok. Tarama başlatın.",
-  "reports.marketIntelligence": "Pazar İstihbaratı"
+  "reports.marketIntelligence": "Claude Market Intelligence"
 }

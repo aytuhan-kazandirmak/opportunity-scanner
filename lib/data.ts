@@ -9,7 +9,7 @@ export const listReports = cache(async (): Promise<Pick<ScanReport, 'id' | 'scan
     .select('id, scan_date, summary, summary_en')
     .order('scan_date', { ascending: false })
 
-  if (error) throw new Error(error.message)
+  if (error) return []
 
   return (data ?? []).map((row) =>
     ScanReportSchema.pick({ id: true, scan_date: true, summary: true, summary_en: true }).parse(row)

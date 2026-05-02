@@ -6,7 +6,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://opportunity-scanner.vercel.app'
 
   const reportEntries: MetadataRoute.Sitemap = reports.map((r) => ({
-    url: `${baseUrl}/reports/${r.scan_date}`,
+    url: `${baseUrl}/${r.scan_date}`,
     lastModified: new Date(r.scan_date),
     changeFrequency: 'yearly',
     priority: 0.7,
@@ -15,13 +15,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     {
       url: baseUrl,
-      changeFrequency: 'weekly',
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/reports`,
       changeFrequency: 'daily',
-      priority: 0.9,
+      priority: 1,
     },
     ...reportEntries,
   ]

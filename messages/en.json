@@ -26,5 +26,5 @@
   "reports.description": "Daily analysis of AI and software market gaps, fresh GitHub projects, and solo-buildable SaaS opportunities.",
   "reports.count": "{count} reports",
   "reports.noReports": "No reports yet. Run a scan to get started.",
-  "reports.marketIntelligence": "Market Intelligence"
+  "reports.marketIntelligence": "Claude Market Intelligence"
 }

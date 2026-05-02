@@ -39,7 +39,34 @@ For each finding answer:
 - What problem does it solve?
 - What's missing around it? (UI, marketplace, hosted version, Turkish localization)
 - How fast can a solo frontend dev ship something? (days / weeks / months)
-- Competition level: (none / low / medium / high)
+- Competition level: (none / low / medium / high) — assign AFTER Step 3.5
+
+### 3.5 Competitor Research (MANDATORY — assign competition level only after this)
+
+For EVERY opportunity, use tavily to actively search for competing products BEFORE assigning competition level.
+
+**Search queries to run for each opportunity:**
+- `"[opportunity topic] tool" site:producthunt.com`
+- `"[opportunity topic] app" site:github.com`
+- `"[opportunity topic] SaaS"` (general web)
+- `"[specific feature] software"` (e.g., "claude hook builder tool")
+
+**Competition level calibration — revise your initial estimate after research:**
+- `none`: Exhaustive search found 0 direct competitors. Partial competitors count as `low`.
+- `low`: 1-3 products exist but nascent, unmaintained, or cover only part of the gap. List them ALL.
+- `medium`: 4-8 real products, or 1-3 well-funded ones. Market exists but not saturated.
+- `high`: Mature, well-funded solutions dominate. A solo dev would struggle to differentiate.
+
+**Rule:** Finding 5+ real competitors during research should upgrade `none`→`low` or `low`→`medium`. It is better to correctly rate `medium` than to falsely report `none`.
+
+**Populate `competitors` array with real names, types, and URLs.** Empty array is only acceptable for confirmed `none` after exhaustive search.
+
+Competitor types:
+- `big-tech`: Google, Microsoft, Apple, Meta, Amazon, Salesforce, Adobe, etc.
+- `startup`: Funded product with a team (check Crunchbase, LinkedIn)
+- `solo-dev`: Individual maker (indie hacker, personal project)
+- `open-source`: Primary distribution via GitHub/GitLab with OSS license
+- `other`: Communities, marketplaces, directories that partially compete
 
 ### 4. Verification (MANDATORY - run after every scan)
 
@@ -76,12 +103,16 @@ Save report as: `reports/YYYY-MM-DD.md`
 Each item format:
 
 - **Verification:** ✅ / ⚠️ / ❌ + source link
-- **What:** 3-4 sentences. What exactly was released, by whom, and when. What does it do technically? Who is the intended user? What does it replace or enable that wasn't possible before?
-- **Why it matters:** 3-4 sentences. What specific problem does this solve, and for how many people? Is there a clear trend or wave this is riding (AI tooling, MCP ecosystem, etc.)? Are there comparable products that already found product-market fit in adjacent spaces? What makes the timing right now vs. 6 months ago?
-- **Missing piece:** 3-4 sentences. Describe the gap as concretely as possible — not "no UI" but "developers must configure this via JSON files with no validation or preview; a visual editor would remove the main friction point." Why hasn't someone built this yet? What would the MVP look like, and who would pay for it first?
-- **Verdict:** One honest sentence. Is this a real opportunity worth exploring, or does it sound better than it is? Flag any red flags (niche too small, problem already solved, requires audience the builder doesn't have).
+- **What:** [Turkish] 3-4 sentences. What exactly was released, by whom, and when. What does it do technically? Who is the intended user? What does it replace or enable that wasn't possible before?
+  > **EN:** [English] Same content rephrased naturally in English.
+- **Why it matters:** [Turkish] 3-4 sentences. What specific problem does this solve, and for how many people? Is there a clear trend or wave this is riding? Are there comparable products that already found PMF in adjacent spaces? What makes the timing right now?
+  > **EN:** [English] Same content rephrased naturally in English.
+- **Missing piece:** [Turkish] 3-4 sentences. Describe the gap as concretely as possible — not "no UI" but "developers must configure this via JSON files with no validation or preview; a visual editor would remove the main friction point." Why hasn't someone built this yet? What would the MVP look like?
+  > **EN:** [English] Same content rephrased naturally in English.
+- **Verdict:** One honest sentence. Is this a real opportunity worth exploring, or does it sound better than it is? Flag any red flags.
 - **Build time:** days / weeks
 - **Competition:** none / low / medium / high
+- **Competitors:** [name] (type) — url · [name] (type) — url  *(write "none found" only after exhaustive research)*
 - **Domain idea:** example domain name
 
 ### Step 2 — Save to database (MANDATORY after every scan)
@@ -94,17 +125,28 @@ After saving the markdown, POST to the API:
 ```json
 {
   "scan_date": "YYYY-MM-DD",
-  "summary": "2-3 sentence summary of today's most important findings",
+  "summary": "2-3 cümle Türkçe özet — bugünün en önemli bulguları",
+  "summary_en": "2-3 sentence English overview — most important findings today",
   "opportunities": [
     {
+      "title": "Concise English title for the opportunity",
       "verification": "verified | unverified | hallucinated",
       "source_url": "https://...",
-      "what": "3-4 sentence description of what was released, by whom, and what it enables",
-      "why_it_matters": "3-4 sentence market signal — problem size, timing, comparable successes",
-      "missing_piece": "3-4 sentence concrete gap description — what exactly is missing and why",
-      "verdict": "one honest sentence on whether this is worth pursuing",
+      "what": "3-4 cümle Türkçe: ne yayınlandı, kim yaptı, nasıl çalışıyor, kime hitap ediyor",
+      "what_en": "3-4 sentence English: what was released, by whom, how it works technically, who it serves",
+      "why_it_matters": "3-4 cümle Türkçe: problem büyüklüğü, zamanlama sinyali, benzer başarılı ürünler",
+      "why_it_matters_en": "3-4 sentence English: problem size, timing signal, comparable successes",
+      "missing_piece": "3-4 cümle Türkçe: somut boşluk — 'UI yok' değil, 'kullanıcılar X için Y adım atmak zorunda'",
+      "missing_piece_en": "3-4 sentence English: specific gap — not 'no UI' but 'users must configure via JSON files with no validation'",
       "build_time": "X days / X weeks",
       "competition": "none | low | medium | high",
+      "competitors": [
+        {
+          "name": "Actual product or company name",
+          "type": "big-tech | startup | solo-dev | open-source | other",
+          "url": "https://actual-url.com"
+        }
+      ],
       "domain_idea": "example.com",
       "category": "fresh | growing | build_this_week | too_late | wild_card"
     }
@@ -136,11 +178,12 @@ Next.js 16.2.4 (App Router) + Supabase + TypeScript + Tailwind v4 + Vercel
 
 ### Current Project State
 
-The app is bootstrapped from `create-next-app`. The following directories do not exist yet and must be created when needed:
-- `lib/` — data layer (`lib/data.ts`, `lib/schemas.ts`, `lib/types/database.ts`)
-- `supabase/migrations/` — DB migrations
-- `app/reports/` — report list and detail pages
-- `components/` — shared UI components
+The following directories and key files exist:
+- `lib/` — `lib/data.ts`, `lib/schemas.ts`, `lib/types/database.ts`, `lib/supabase.ts`
+- `supabase/migrations/` — DB migration SQL files
+- `app/[date]/` — report detail page (dynamic route)
+- `components/` — shared UI components, `intl-provider.tsx`, report client components
+- `messages/tr.json`, `messages/en.json` — i18n strings
 
 ### Rendering
 - Static pages: SSG
@@ -184,8 +227,9 @@ Defined in `.claude/SCHEMA_CONTRACT.md`. Key table:
 |--------|------|-------------|
 | id | uuid | Primary key |
 | scan_date | date | Report date |
-| opportunities | jsonb | Array<Opportunity> |
-| summary | text | Summary text |
+| opportunities | jsonb | Array\<Opportunity\> — TR + EN fields, competitors included |
+| summary | text | Turkish summary |
+| summary_en | text | English summary |
 | created_at | timestamptz | Creation timestamp |
 
 RLS: public authenticated read, service role write only.

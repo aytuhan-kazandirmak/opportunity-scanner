@@ -1,30 +1,46 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
-import { useIntl, FormattedMessage } from 'react-intl'
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Activity, ArrowRight, CalendarDays, Inbox, Scroll } from 'lucide-react'
-import type { ScanReport } from '@/lib/schemas'
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useIntl, FormattedMessage } from "react-intl";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Activity,
+  ArrowRight,
+  CalendarDays,
+  Inbox,
+  Scroll,
+} from "lucide-react";
+import type { ScanReport } from "@/lib/schemas";
 
-type ReportSummary = Pick<ScanReport, 'id' | 'scan_date' | 'summary' | 'summary_en'>
+type ReportSummary = Pick<
+  ScanReport,
+  "id" | "scan_date" | "summary" | "summary_en"
+>;
 
 function formatDate(dateStr: string, locale: string): string {
-  const [year, month, day] = dateStr.split('-').map(Number)
+  const [year, month, day] = dateStr.split("-").map(Number);
   return new Date(year, month - 1, day).toLocaleDateString(
-    locale === 'en' ? 'en-US' : 'tr-TR',
-    { year: 'numeric', month: 'long', day: 'numeric' }
-  )
+    locale === "en" ? "en-US" : "tr-TR",
+    { year: "numeric", month: "long", day: "numeric" },
+  );
 }
 
 export function ReportsListClient({ reports }: { reports: ReportSummary[] }) {
-  const { locale } = useIntl()
-  const [mounted, setMounted] = useState(false)
+  const { locale } = useIntl();
+  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => { setMounted(true) }, [])
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   function localise(tr: string | null, en: string | null | undefined) {
-    return mounted && locale === 'en' ? (en ?? tr) : tr
+    return mounted && locale === "en" ? (en ?? tr) : tr;
   }
 
   return (
@@ -49,7 +65,10 @@ export function ReportsListClient({ reports }: { reports: ReportSummary[] }) {
           <div className="mt-6">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-sm font-medium">
               <Scroll className="size-3.5 text-muted-foreground" />
-              <FormattedMessage id="reports.count" values={{ count: reports.length }} />
+              <FormattedMessage
+                id="reports.count"
+                values={{ count: reports.length }}
+              />
             </span>
           </div>
         )}
@@ -66,19 +85,23 @@ export function ReportsListClient({ reports }: { reports: ReportSummary[] }) {
         <ul className="flex flex-col gap-4">
           {reports.map((report) => (
             <li key={report.id}>
-              <Link href={`/reports/${report.scan_date}`} className="group block">
+              <Link href={`/${report.scan_date}`} className="group block">
                 <Card className="transition-colors hover:bg-muted/50">
                   <CardHeader>
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <CalendarDays className="size-4" />
-                        <span className="font-mono text-xs">{report.scan_date}</span>
+                        <span className="font-mono text-xs">
+                          {report.scan_date}
+                        </span>
                       </div>
                       <ArrowRight className="size-4 text-muted-foreground transition-transform group-hover:translate-x-1" />
                     </div>
 
                     <CardTitle className="text-base">
-                      {mounted ? formatDate(report.scan_date, locale) : formatDate(report.scan_date, 'tr')}
+                      {mounted
+                        ? formatDate(report.scan_date, locale)
+                        : formatDate(report.scan_date, "tr")}
                     </CardTitle>
 
                     {localise(report.summary, report.summary_en) && (
@@ -94,5 +117,5 @@ export function ReportsListClient({ reports }: { reports: ReportSummary[] }) {
         </ul>
       )}
     </main>
-  )
+  );
 }

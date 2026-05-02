@@ -7,8 +7,12 @@ import { ReportDetailClient } from '@/components/report-detail-client'
 export const revalidate = 86400
 
 export async function generateStaticParams() {
-  const reports = await listReports()
-  return reports.map((r) => ({ date: r.scan_date }))
+  try {
+    const reports = await listReports()
+    return reports.map((r) => ({ date: r.scan_date }))
+  } catch {
+    return []
+  }
 }
 
 export async function generateMetadata(props: {
