@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { listReports } from '@/lib/data'
+import { listReports, getReport } from '@/lib/data'
 import { SiteHeader } from '@/components/site-header'
 import { HeroSection } from '@/components/hero-section'
 import { TickerSection } from '@/components/ticker-section'
@@ -37,12 +37,16 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function HomePage() {
   const reports = await listReports()
+  const latestDate = reports[0]?.scan_date
+  const latestScan = latestDate ? await getReport(latestDate) : null
+  const opportunities = latestScan?.opportunities ?? []
+
   return (
     <div className="bg-brand-bg text-brand-ink transition-colors duration-[250ms]">
       <SiteHeader />
       <HeroSection reportCount={reports.length} />
       <TickerSection />
-      <FeedSection reports={reports.slice(0, 6)} />
+      <FeedSection opportunities={opportunities} scanDate={latestDate ?? ''} />
       <ToolsSection />
       <StatsSection />
       <QuotesSection />
