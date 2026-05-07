@@ -20,6 +20,8 @@ export const OpportunitySchema = z.object({
   domain_idea: z.string().optional(),
   verification: z.enum(['verified', 'unverified', 'removed']),
   source_url: z.string().url().optional(),
+  tags: z.array(z.string()).optional(),
+  opportunity_score: z.number().min(0).max(100).optional(),
 })
 
 // Strict schema for writing: enforces minimum lengths for content fields

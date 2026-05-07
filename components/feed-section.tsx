@@ -104,7 +104,7 @@ export function FeedSection({ opportunities, scanDate }: FeedSectionProps) {
   return (
     <section
       id="feed"
-      className="max-w-[1440px] mx-auto px-7 lg:px-14 py-[90px] border-t border-brand-line-soft"
+      className="max-w-360 mx-auto px-7 lg:px-14 py-22.5 border-t border-brand-line-soft"
     >
       {/* Section heading */}
       <div className="mb-10">
@@ -153,7 +153,6 @@ export function FeedSection({ opportunities, scanDate }: FeedSectionProps) {
                   {count}
                 </span>
               )} */}
-
               <span
                 className={`text-[10px] text-center border-l pl-1 border-solid border-[#c9bfa9] ${activeChip === chip ? "text-brand-bg/60" : "text-brand-ink3"}`}
               >

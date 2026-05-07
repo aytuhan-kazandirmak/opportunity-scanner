@@ -1,56 +1,56 @@
-import type { Metadata } from 'next'
-import { listReports, getReport } from '@/lib/data'
-import { SiteHeader } from '@/components/site-header'
-import { HeroSection } from '@/components/hero-section'
-import { TickerSection } from '@/components/ticker-section'
-import { FeedSection } from '@/components/feed-section'
-import { ToolsSection } from '@/components/tools-section'
-import { StatsSection } from '@/components/stats-section'
-import { QuotesSection } from '@/components/quotes-section'
-import { SiteFooter } from '@/components/site-footer'
+import type { Metadata } from "next";
+import { listReports, getReport } from "@/lib/data";
+import { SiteHeader } from "@/components/site-header";
+import { HeroSection } from "@/components/hero-section";
+import { TickerSection } from "@/components/ticker-section";
+import { FeedSection } from "@/components/feed-section";
+import { ToolsSection } from "@/components/tools-section";
+import { StatsSection } from "@/components/stats-section";
+import { QuotesSection } from "@/components/quotes-section";
+import { SiteFooter } from "@/components/site-footer";
 
-export const revalidate = 3600
+export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   const description =
-    'Daily AI ecosystem scanning — we surface the gaps left in the market and report them to founders. Claude Code, Cursor, Codex, and more.'
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+    "Daily AI ecosystem scanning — we surface the gaps left in the market and report them to founders. Claude Code, Cursor, Codex, and more.";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
   return {
-    title: { absolute: 'AI Market Lens — Daily Opportunity Scanner' },
+    title: { absolute: "AI Market Lens — Daily Opportunity Scanner" },
     description,
     openGraph: {
-      title: 'AI Market Lens — Daily Opportunity Scanner',
+      title: "AI Market Lens — Daily Opportunity Scanner",
       description,
       ...(siteUrl && { url: siteUrl }),
-      type: 'website',
-      locale: 'en_US',
-      alternateLocale: ['tr_TR'],
+      type: "website",
+      locale: "en_US",
+      alternateLocale: ["tr_TR"],
     },
     twitter: {
-      card: 'summary_large_image',
-      title: 'AI Market Lens — Daily Opportunity Scanner',
+      card: "summary_large_image",
+      title: "AI Market Lens — Daily Opportunity Scanner",
       description,
     },
     ...(siteUrl && { alternates: { canonical: siteUrl } }),
-  }
+  };
 }
 
 export default async function HomePage() {
-  const reports = await listReports()
-  const latestDate = reports[0]?.scan_date
-  const latestScan = latestDate ? await getReport(latestDate) : null
-  const opportunities = latestScan?.opportunities ?? []
+  const reports = await listReports();
+  const latestDate = reports[0]?.scan_date;
+  const latestScan = latestDate ? await getReport(latestDate) : null;
+  const opportunities = latestScan?.opportunities ?? [];
 
   return (
-    <div className="bg-brand-bg text-brand-ink transition-colors duration-[250ms]">
+    <div className="bg-brand-bg text-brand-ink transition-colors duration-250">
       <SiteHeader />
       <HeroSection reportCount={reports.length} />
       <TickerSection />
-      <FeedSection opportunities={opportunities} scanDate={latestDate ?? ''} />
+      <FeedSection opportunities={opportunities} scanDate={latestDate ?? ""} />
       <ToolsSection />
       <StatsSection />
       <QuotesSection />
       <SiteFooter />
     </div>
-  )
+  );
 }
