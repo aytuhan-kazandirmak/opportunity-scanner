@@ -23,15 +23,26 @@ export async function generateMetadata(props: {
   const description =
     report?.summary ??
     `Opportunity scan report for ${date}. Covers fresh GitHub projects, market gaps, and solo-buildable SaaS ideas in the AI and software space.`
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+  const reportUrl = siteUrl ? `${siteUrl}/${date}` : undefined
   return {
     title: `Scan ${date} | Opportunity Scanner`,
     description,
     openGraph: {
       title: `Opportunity Scan — ${date}`,
       description,
+      ...(reportUrl && { url: reportUrl }),
       type: 'article',
+      locale: 'en_US',
+      alternateLocale: ['tr_TR'],
       publishedTime: report?.created_at,
     },
+    twitter: {
+      card: 'summary_large_image',
+      title: `Opportunity Scan — ${date}`,
+      description,
+    },
+    ...(reportUrl && { alternates: { canonical: reportUrl } }),
   }
 }
 
@@ -49,6 +60,7 @@ export default async function ReportDetailPage(props: {
     headline: `Opportunity Scan — ${date}`,
     datePublished: report.created_at,
     description: report.summary ?? `Opportunity scan report for ${date}`,
+    inLanguage: 'en',
   }
 
   return (

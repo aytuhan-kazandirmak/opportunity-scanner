@@ -9,13 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Activity,
-  ArrowRight,
-  CalendarDays,
-  Inbox,
-  Scroll,
-} from "lucide-react";
+import { ArrowRight, CalendarDays, Inbox } from "lucide-react";
 import type { ScanReport } from "@/lib/schemas";
 
 type ReportSummary = Pick<
@@ -44,36 +38,7 @@ export function ReportsListClient({ reports }: { reports: ReportSummary[] }) {
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-12">
-      <header className="mb-10">
-        <div className="mb-3 flex items-center gap-2 text-muted-foreground">
-          <Activity className="size-4" />
-          <span className="text-sm font-medium">
-            <FormattedMessage id="reports.marketIntelligence" />
-          </span>
-        </div>
-
-        <h1 className="mb-3 text-3xl font-bold tracking-tight">
-          <FormattedMessage id="reports.heading" />
-        </h1>
-
-        <p className="text-base leading-relaxed text-muted-foreground">
-          <FormattedMessage id="reports.description" />
-        </p>
-
-        {reports.length > 0 && (
-          <div className="mt-6">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-sm font-medium">
-              <Scroll className="size-3.5 text-muted-foreground" />
-              <FormattedMessage
-                id="reports.count"
-                values={{ count: reports.length }}
-              />
-            </span>
-          </div>
-        )}
-      </header>
-
+    <>
       {reports.length === 0 ? (
         <div className="flex flex-col items-center gap-3 py-20 text-center text-muted-foreground">
           <Inbox className="size-10 opacity-40" />
@@ -116,6 +81,6 @@ export function ReportsListClient({ reports }: { reports: ReportSummary[] }) {
           ))}
         </ul>
       )}
-    </main>
+    </>
   );
 }

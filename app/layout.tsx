@@ -1,24 +1,26 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { JetBrains_Mono } from "next/font/google";
 import { IntlProvider } from "@/components/intl-provider";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin", "latin-ext"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | Opportunity Scanner',
-    default: 'Opportunity Scanner',
+    template: "%s | Opportunity Scanner",
+    default: "Opportunity Scanner",
   },
-  description: 'Daily AI and software market gap analysis.',
+  description: "Daily AI and software market gap analysis.",
+  openGraph: {
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({
@@ -29,11 +31,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      data-theme="light"
+      className={`${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-          <IntlProvider>{children}</IntlProvider>
-        </body>
+        <IntlProvider>{children}</IntlProvider>
+      </body>
     </html>
   );
 }
