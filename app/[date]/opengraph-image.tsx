@@ -1,3 +1,5 @@
+import { readFileSync } from 'fs'
+import path from 'path'
 import { ImageResponse } from 'next/og'
 import { getReport } from '@/lib/data'
 
@@ -24,21 +26,6 @@ function getISOWeek(dateStr: string): number {
   )
 }
 
-async function loadFont(): Promise<ArrayBuffer | null> {
-  try {
-    const css = await fetch(
-      'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap',
-      { headers: { 'User-Agent': 'Mozilla/5.0' } },
-    ).then((r) => r.text())
-
-    const fontUrl = css.match(/src: url\((.+?)\) format\('woff2'\)/)?.[1]
-    if (!fontUrl) return null
-    return fetch(fontUrl).then((r) => r.arrayBuffer())
-  } catch {
-    return null
-  }
-}
-
 export default async function Image({
   params,
 }: {
@@ -47,7 +34,9 @@ export default async function Image({
   const { date } = await params
 
   const [fontData, report] = await Promise.all([
-    loadFont(),
+    Promise.resolve(
+      readFileSync(path.join(process.cwd(), 'public', 'fonts', 'JetBrainsMono-Bold.woff2')),
+    ),
     getReport(date).catch(() => null),
   ])
 
@@ -61,10 +50,8 @@ export default async function Image({
       : rawSummary
     : `${oppCount} opportunities identified this week.`
 
-  const fontFamily = fontData ? '"JetBrains Mono", monospace' : 'monospace'
-  const fonts = fontData
-    ? [{ name: 'JetBrains Mono', data: fontData, style: 'normal' as const, weight: 700 as const }]
-    : []
+  const fontFamily = '"JetBrains Mono", monospace'
+  const fonts = [{ name: 'JetBrains Mono', data: fontData, style: 'normal' as const, weight: 700 as const }]
 
   return new ImageResponse(
     (

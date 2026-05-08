@@ -1,3 +1,5 @@
+import { readFileSync } from 'fs'
+import path from 'path'
 import { ImageResponse } from 'next/og'
 
 export const size = { width: 1200, height: 630 }
@@ -6,23 +8,10 @@ export const revalidate = 3600
 
 const CELLS = [1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1]
 
-async function loadFont(): Promise<ArrayBuffer | null> {
-  try {
-    const css = await fetch(
-      'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap',
-      { headers: { 'User-Agent': 'Mozilla/5.0' } },
-    ).then((r) => r.text())
-
-    const fontUrl = css.match(/src: url\((.+?)\) format\('woff2'\)/)?.[1]
-    if (!fontUrl) return null
-    return fetch(fontUrl).then((r) => r.arrayBuffer())
-  } catch {
-    return null
-  }
-}
-
 export default async function Image() {
-  const fontData = await loadFont()
+  const fontData = readFileSync(
+    path.join(process.cwd(), 'public', 'fonts', 'JetBrainsMono-Bold.woff2'),
+  )
 
   return new ImageResponse(
     (
@@ -35,7 +24,7 @@ export default async function Image() {
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: '#f3eee3',
-          fontFamily: fontData ? '"JetBrains Mono", monospace' : 'monospace',
+          fontFamily: '"JetBrains Mono", monospace',
           position: 'relative',
         }}
       >
@@ -115,9 +104,7 @@ export default async function Image() {
     ),
     {
       ...size,
-      fonts: fontData
-        ? [{ name: 'JetBrains Mono', data: fontData, style: 'normal', weight: 700 }]
-        : [],
+      fonts: [{ name: 'JetBrains Mono', data: fontData, style: 'normal', weight: 700 }],
     },
   )
 }
