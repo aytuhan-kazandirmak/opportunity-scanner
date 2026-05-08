@@ -35,7 +35,7 @@ export default async function Image({
 
   const [fontData, report] = await Promise.all([
     Promise.resolve(
-      readFileSync(path.join(process.cwd(), 'public', 'fonts', 'JetBrainsMono-Bold.woff2')),
+      readFileSync(path.join(process.cwd(), 'public', 'fonts', 'JetBrainsMono-Bold.ttf')),
     ),
     getReport(date).catch(() => null),
   ])

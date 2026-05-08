@@ -10,7 +10,7 @@ const CELLS = [1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1]
 
 export default async function Image() {
   const fontData = readFileSync(
-    path.join(process.cwd(), 'public', 'fonts', 'JetBrainsMono-Bold.woff2'),
+    path.join(process.cwd(), 'public', 'fonts', 'JetBrainsMono-Bold.ttf'),
   )
 
   return new ImageResponse(
