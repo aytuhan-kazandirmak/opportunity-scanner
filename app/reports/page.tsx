@@ -10,12 +10,12 @@ export async function generateMetadata(): Promise<Metadata> {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
   const url = siteUrl ? `${siteUrl}/reports` : undefined;
   return {
-    title: "Raporlar | AI Market Lens",
-    description: "AI ve yazılım pazar açıklarının haftalık tarama raporları.",
+    title: "Haftalık AI Fırsatları | AI Market Lens",
+    description: "Her hafta AI araçlarındaki pazar boşluklarını ve iş fırsatlarını analiz ediyoruz. Claude Code, Cursor, Codex, Windsurf için rekabet analizi ve startup fikirleri.",
     ...(url && { alternates: { canonical: url } }),
     openGraph: {
-      title: "Raporlar | AI Market Lens",
-      description: "AI ve yazılım pazar açıklarının haftalık tarama raporları.",
+      title: "Haftalık AI Fırsatları | AI Market Lens",
+      description: "Her hafta AI araçlarındaki pazar boşluklarını ve iş fırsatlarını analiz ediyoruz. Claude Code, Cursor, Codex, Windsurf için rekabet analizi ve startup fikirleri.",
       ...(url && { url }),
       type: "website",
     },
@@ -34,14 +34,15 @@ export default async function ReportsPage() {
             className="size-1.5 rounded-full bg-brand-accent"
             style={{ animation: "brand-pulse 1.6s ease-in-out infinite" }}
           />
-          HAFTALIK RAPORLAR · REKABET SEVİYESİNE GÖRE SIRALI
+          HAFTALIK AI FIRSATLARI · RAKİP ANALİZİ
         </div>
         <h1 className="mb-4 font-mono text-5xl font-bold leading-tight tracking-tight md:text-6xl">
-          tarama <span className="text-brand-ink2">raporları.</span>
+          fırsat <span className="text-brand-ink2">raporları.</span>
         </h1>
         <p className="mb-10 max-w-[600px] text-[15px] leading-relaxed text-brand-ink2">
-          AI ve yazılım pazar açıklarının haftalık analizi. Taze GitHub
-          sinyalleri, rakipsiz nişler ve solo yapılabilir SaaS fırsatları.
+          Claude Code, Cursor, Codex, Windsurf ve 15+ AI aracındaki pazar
+          boşluklarını her hafta analiz ediyoruz. İş fırsatları, rakip haritası
+          ve eksik parçalar — kurucular için.
         </p>
         <ReportsListClient reports={reports} />
       </main>

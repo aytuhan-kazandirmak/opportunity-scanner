@@ -7,7 +7,7 @@ import { PixelGlobe } from "@/components/pixel-globe";
 
 type HeroSectionProps = { reportCount: number };
 
-export function HeroSection({ reportCount: _reportCount }: HeroSectionProps) {
+export function HeroSection({ reportCount }: HeroSectionProps) {
   const [mounted, setMounted] = useState(false);
   const [globeTheme, setGlobeTheme] = useState<"light" | "dark">("light");
 
@@ -33,7 +33,7 @@ export function HeroSection({ reportCount: _reportCount }: HeroSectionProps) {
           {/* Eyebrow */}
           <div className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.08em] text-brand-ink3 px-[10px] py-[5px] border border-brand-line-soft rounded-full mb-6">
             <span className="w-1.5 h-1.5 rounded-full bg-brand-accent shadow-[0_0_0_3px_color-mix(in_oklab,var(--brand-accent)_25%,transparent)] animate-[brand-pulse_1.6s_ease-in-out_infinite]" />
-            <FormattedMessage id="home.hero.eyebrow" />
+            {reportCount} <FormattedMessage id="home.hero.eyebrow" />
           </div>
 
           {/* H1 */}

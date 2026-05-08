@@ -13,13 +13,13 @@ export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   const description =
-    "Daily AI ecosystem scanning — we surface the gaps left in the market and report them to founders. Claude Code, Cursor, Codex, and more.";
+    "Weekly AI business opportunities from Claude Code, Cursor, Codex, Windsurf and 15+ tools. Discover market gaps, startup ideas, competitive analysis — and find the AI tools that already compete in each space.";
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
   return {
-    title: { absolute: "AI Market Lens — Daily Opportunity Scanner" },
+    title: { absolute: "AI Market Lens — Weekly AI Tools Opportunity Reports" },
     description,
     openGraph: {
-      title: "AI Market Lens — Daily Opportunity Scanner",
+      title: "AI Market Lens — Weekly AI Tools Opportunity Reports",
       description,
       ...(siteUrl && { url: siteUrl }),
       type: "website",
@@ -28,7 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: "AI Market Lens — Daily Opportunity Scanner",
+      title: "AI Market Lens — Weekly AI Tools Opportunity Reports",
       description,
     },
     ...(siteUrl && { alternates: { canonical: siteUrl } }),
@@ -44,7 +44,7 @@ export default async function HomePage() {
   return (
     <div className="bg-brand-bg text-brand-ink transition-colors duration-250">
       <SiteHeader />
-      <HeroSection reportCount={reports.length} />
+      <HeroSection reportCount={reports?.[0]?.opp_count} />
       <TickerSection />
       <FeedSection opportunities={opportunities} scanDate={latestDate ?? ""} />
       <ToolsSection />

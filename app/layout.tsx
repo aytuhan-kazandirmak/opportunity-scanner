@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     template: "%s | Opportunity Scanner",
     default: "Opportunity Scanner",
   },
-  description: "Daily AI and software market gap analysis.",
+  description: "Weekly AI tools market gap analysis — Claude Code, Cursor, Codex, Windsurf and more.",
   openGraph: {
     locale: "en_US",
   },

@@ -169,7 +169,7 @@ export function ReportsListClient({ reports }: { reports: ListReport[] }) {
       label: formatMessage({ id: "reports.sortOppCount" }),
     },
   ];
-  console.log("reports", reports);
+
   return (
     <div>
       {/* Filter chips — yatay kaydırılabilir */}
@@ -269,7 +269,8 @@ export function ReportsListClient({ reports }: { reports: ListReport[] }) {
           {filtered.map((report) => {
             const { week, total } = getWeekOfMonth(report.scan_date);
             const year = report.scan_date.slice(0, 4);
-            const summaryText = localise(report.summary, report.summary_en) ?? "";
+            const summaryText =
+              localise(report.summary, report.summary_en) ?? "";
             const words = summaryText.trim().split(/\s+/);
             const title =
               words.length > 8
@@ -298,7 +299,8 @@ export function ReportsListClient({ reports }: { reports: ListReport[] }) {
                   {/* Col 2: Title + tags */}
                   <div>
                     <p className="mb-2 text-lg font-semibold leading-snug tracking-tight text-brand-ink line-clamp-1">
-                      {title || `${year} · Hafta ${week}`}</p>
+                      {title || `${year} · Hafta ${week}`}
+                    </p>
                     {(report.has_hot || visibleTags.length > 0) && (
                       <div className="flex flex-wrap items-center gap-1.5">
                         {report.has_hot && (

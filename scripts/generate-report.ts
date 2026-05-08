@@ -1,10 +1,10 @@
-import Anthropic from '@anthropic-ai/sdk'
-import { OpportunityInputSchema, ScanReportSchema } from '../lib/schemas'
-import { z } from 'zod'
+import Anthropic from "@anthropic-ai/sdk";
+import { OpportunityInputSchema, ScanReportSchema } from "../lib/schemas";
+import { z } from "zod";
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-const today = new Date().toISOString().split('T')[0]
+const today = new Date().toISOString().split("T")[0];
 
 const SYSTEM_PROMPT = `You are a market research analyst specializing in software and AI opportunities for solo developers and small teams.
 
@@ -47,43 +47,48 @@ Output a single raw JSON object matching this TypeScript type (no markdown, no c
     verification: "unverified",
     source_url?: string
   }>
-}`
+}`;
 
 async function main() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
-  const reportApiKey = process.env.REPORT_API_KEY
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  const reportApiKey = process.env.REPORT_API_KEY;
 
   if (!siteUrl || !reportApiKey) {
-    throw new Error('NEXT_PUBLIC_SITE_URL and REPORT_API_KEY env vars are required')
+    throw new Error(
+      "NEXT_PUBLIC_SITE_URL and REPORT_API_KEY env vars are required",
+    );
   }
 
-  console.log(`Generating report for ${today}...`)
+  console.log(`Generating report for ${today}...`);
 
   const message = await client.messages.create({
-    model: 'claude-opus-4-7',
+    model: "claude-opus-4-7",
     max_tokens: 8192,
     messages: [
       {
-        role: 'user',
+        role: "user",
         content: `Today's date is ${today}. Generate a fresh opportunity scan report. Research current trends, recent GitHub activity, and emerging market gaps. Produce the JSON output as specified.`,
       },
     ],
     system: SYSTEM_PROMPT,
-  })
+  });
 
   const rawText = message.content
-    .filter((b) => b.type === 'text')
+    .filter((b) => b.type === "text")
     .map((b) => b.text)
-    .join('')
+    .join("");
 
-  let parsed: unknown
+  let parsed: unknown;
   try {
     // Strip any accidental markdown fences
-    const cleaned = rawText.replace(/^```(?:json)?\n?/m, '').replace(/\n?```$/m, '').trim()
-    parsed = JSON.parse(cleaned)
+    const cleaned = rawText
+      .replace(/^```(?:json)?\n?/m, "")
+      .replace(/\n?```$/m, "")
+      .trim();
+    parsed = JSON.parse(cleaned);
   } catch (e) {
-    console.error('Failed to parse JSON response:', rawText)
-    throw e
+    console.error("Failed to parse JSON response:", rawText);
+    throw e;
   }
 
   // Validate against our schema (lenient read schema for the outer wrapper)
@@ -92,33 +97,35 @@ async function main() {
     opportunities: z.array(OpportunityInputSchema),
     summary: z.string().nullable().optional(),
     summary_en: z.string().nullable().optional(),
-  })
+  });
 
-  const validated = BodySchema.parse(parsed)
+  const validated = BodySchema.parse(parsed);
   // Override scan_date to today (in case Claude puts a different date)
-  validated.scan_date = today
+  validated.scan_date = today;
 
-  console.log(`Validated ${validated.opportunities.length} opportunities. Saving to DB...`)
+  console.log(
+    `Validated ${validated.opportunities.length} opportunities. Saving to DB...`,
+  );
 
   const res = await fetch(`${siteUrl}/api/save-report`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': reportApiKey,
+      "Content-Type": "application/json",
+      "x-api-key": reportApiKey,
     },
     body: JSON.stringify(validated),
-  })
+  });
 
   if (!res.ok) {
-    const body = await res.text()
-    throw new Error(`save-report failed (${res.status}): ${body}`)
+    const body = await res.text();
+    throw new Error(`save-report failed (${res.status}): ${body}`);
   }
 
-  const result = await res.json()
-  console.log('Report saved:', result)
+  const result = await res.json();
+  console.log("Report saved:", result);
 }
 
 main().catch((err) => {
-  console.error(err)
-  process.exit(1)
-})
+  console.error(err);
+  process.exit(1);
+});

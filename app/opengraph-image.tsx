@@ -85,7 +85,7 @@ export default async function Image() {
             letterSpacing: '0.04em',
           }}
         >
-          Daily AI Opportunity Scanner
+          Weekly AI Tools Opportunity Reports
         </p>
 
         {/* Domain */}

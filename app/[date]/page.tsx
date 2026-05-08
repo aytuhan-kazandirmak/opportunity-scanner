@@ -41,7 +41,7 @@ export async function generateMetadata(props: {
   const report = await getReport(date)
   const description =
     report?.summary ??
-    `Opportunity scan report for ${date}. Covers fresh GitHub projects, market gaps, and solo-buildable SaaS ideas in the AI and software space.`
+    `Weekly AI tools opportunity report for ${date}. Market gaps, business opportunities, and competitive analysis across Claude Code, Cursor, Codex, Windsurf and more.`
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
   const reportUrl = siteUrl ? `${siteUrl}/${date}` : undefined
   const week = getISOWeek(date)
@@ -85,7 +85,7 @@ export default async function ReportDetailPage(props: {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: `${year} · Hafta ${week} tarama raporu`,
+    headline: `${year} · Hafta ${week} fırsat raporu`,
     datePublished: report.created_at,
     description: report.summary ?? `Opportunity scan report for ${date}`,
     inLanguage: 'tr',
@@ -112,7 +112,7 @@ export default async function ReportDetailPage(props: {
         {/* Page heading */}
         <h1 className="mb-7 font-mono text-4xl font-bold leading-tight tracking-tight md:text-5xl">
           {year} · Hafta {week}{' '}
-          <em className="not-italic text-brand-ink2">tarama raporu.</em>
+          <em className="not-italic text-brand-ink2">fırsat raporu.</em>
         </h1>
 
         <ReportDetailClient

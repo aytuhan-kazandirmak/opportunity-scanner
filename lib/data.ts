@@ -1,6 +1,6 @@
 import { cache } from 'react'
 import { z } from 'zod'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase'
 import { ScanReportSchema } from '@/lib/schemas'
 import type { ScanReport } from '@/lib/schemas'
 
@@ -33,13 +33,13 @@ const oppCompSchema = z.array(
 )
 
 export const listReports = cache(async (): Promise<ListReport[]> => {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('scan_results')
     .select('id, scan_date, summary, summary_en, opportunities')
     .order('scan_date', { ascending: false })
 
   if (error) {
-    console.error('[listReports] Supabase error:', error)
+    console.error('[listReports] Supabase error:', { message: error.message, code: error.code, details: error.details, hint: error.hint })
     return []
   }
 
@@ -73,7 +73,7 @@ export const listReports = cache(async (): Promise<ListReport[]> => {
 })
 
 export const getReport = cache(async (date: string): Promise<ScanReport | null> => {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('scan_results')
     .select('*')
     .eq('scan_date', date)
