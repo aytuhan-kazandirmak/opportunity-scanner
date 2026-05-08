@@ -54,17 +54,19 @@ export default async function Image() {
           {/* 4×4 pixel grid */}
           <div
             style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
-              gap: '5px',
+              display: 'flex',
+              flexWrap: 'wrap',
               width: '88px',
               height: '88px',
+              gap: '5px',
             }}
           >
             {CELLS.map((on, i) => (
               <div
                 key={i}
                 style={{
+                  width: '17px',
+                  height: '17px',
                   backgroundColor: on ? '#1a1814' : 'transparent',
                   borderRadius: '2px',
                 }}

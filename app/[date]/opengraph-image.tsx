@@ -84,17 +84,19 @@ export default async function Image({
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           <div
             style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
-              gap: '3px',
+              display: 'flex',
+              flexWrap: 'wrap',
               width: '44px',
               height: '44px',
+              gap: '3px',
             }}
           >
             {CELLS.map((on, i) => (
               <div
                 key={i}
                 style={{
+                  width: '8px',
+                  height: '8px',
                   backgroundColor: on ? '#1a1814' : 'transparent',
                   borderRadius: '1px',
                 }}
