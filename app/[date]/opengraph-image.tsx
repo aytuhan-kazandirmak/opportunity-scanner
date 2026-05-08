@@ -120,7 +120,8 @@ export default async function Image({
           {/* Week badge */}
           <div
             style={{
-              display: 'inline-flex',
+              display: 'flex',
+              alignSelf: 'flex-start',
               alignItems: 'center',
               backgroundColor: '#ff6b35',
               color: '#fbf8f1',
@@ -129,7 +130,6 @@ export default async function Image({
               letterSpacing: '0.12em',
               padding: '6px 16px',
               borderRadius: '999px',
-              width: 'fit-content',
             }}
           >
             {year} · WEEK {week}
