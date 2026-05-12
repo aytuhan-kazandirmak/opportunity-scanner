@@ -1,19 +1,19 @@
-import type { Metadata } from 'next'
-import Link from 'next/link'
-import { notFound } from 'next/navigation'
-import { getReport, listReports } from '@/lib/data'
-import { SiteHeader } from '@/components/site-header'
-import { SiteFooter } from '@/components/site-footer'
-import { ReportDetailClient } from '@/components/report-detail-client'
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { getReport, listReports } from "@/lib/data";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { ReportDetailClient } from "@/components/report-detail-client";
 
-export const revalidate = 86400
+export const revalidate = 86400;
 
 function getISOWeek(dateStr: string): number {
-  const [y, m, d] = dateStr.split('-').map(Number)
-  const date = new Date(y, m - 1, d)
-  const thursday = new Date(date)
-  thursday.setDate(date.getDate() + 3 - ((date.getDay() + 6) % 7))
-  const firstThursday = new Date(thursday.getFullYear(), 0, 4)
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const date = new Date(y, m - 1, d);
+  const thursday = new Date(date);
+  thursday.setDate(date.getDate() + 3 - ((date.getDay() + 6) % 7));
+  const firstThursday = new Date(thursday.getFullYear(), 0, 4);
   return (
     1 +
     Math.round(
@@ -22,30 +22,30 @@ function getISOWeek(dateStr: string): number {
         ((firstThursday.getDay() + 6) % 7)) /
         7,
     )
-  )
+  );
 }
 
 export async function generateStaticParams() {
   try {
-    const reports = await listReports()
-    return reports.map((r) => ({ date: r.scan_date }))
+    const reports = await listReports();
+    return reports.map((r) => ({ date: r.scan_date }));
   } catch {
-    return []
+    return [];
   }
 }
 
 export async function generateMetadata(props: {
-  params: Promise<{ date: string }>
+  params: Promise<{ date: string }>;
 }): Promise<Metadata> {
-  const { date } = await props.params
-  const report = await getReport(date)
+  const { date } = await props.params;
+  const report = await getReport(date);
   const description =
-    report?.summary ??
-    `Weekly AI tools opportunity report for ${date}. Market gaps, business opportunities, and competitive analysis across Claude Code, Cursor, Codex, Windsurf and more.`
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
-  const reportUrl = siteUrl ? `${siteUrl}/${date}` : undefined
-  const week = getISOWeek(date)
-  const year = date.split('-')[0]
+    report?.summary_en ??
+    `Weekly AI tools opportunity report for ${date}. Market gaps, business opportunities, and competitive analysis across Claude Code, Cursor, Codex, Windsurf and more.`;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  const reportUrl = siteUrl ? `${siteUrl}/${date}` : undefined;
+  const week = getISOWeek(date);
+  const year = date.split("-")[0];
   return {
     title: `${year} · Hafta ${week} | AI Market Lens`,
     description,
@@ -53,43 +53,46 @@ export async function generateMetadata(props: {
       title: `${year} · Hafta ${week} — AI Market Lens`,
       description,
       ...(reportUrl && { url: reportUrl }),
-      type: 'article',
-      locale: 'en_US',
-      alternateLocale: ['tr_TR'],
+      type: "article",
+      locale: "en_US",
+      alternateLocale: ["tr_TR"],
       publishedTime: report?.created_at,
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title: `${year} · Hafta ${week} — AI Market Lens`,
       description,
     },
     ...(reportUrl && { alternates: { canonical: reportUrl } }),
-  }
+  };
 }
 
 export default async function ReportDetailPage(props: {
-  params: Promise<{ date: string }>
+  params: Promise<{ date: string }>;
 }) {
-  const { date } = await props.params
-  const [report, allReports] = await Promise.all([getReport(date), listReports()])
+  const { date } = await props.params;
+  const [report, allReports] = await Promise.all([
+    getReport(date),
+    listReports(),
+  ]);
 
-  if (!report) notFound()
+  if (!report) notFound();
 
-  const idx = allReports.findIndex((r) => r.scan_date === date)
-  const prevDate = allReports[idx + 1]?.scan_date ?? null
-  const nextDate = allReports[idx - 1]?.scan_date ?? null
+  const idx = allReports.findIndex((r) => r.scan_date === date);
+  const prevDate = allReports[idx + 1]?.scan_date ?? null;
+  const nextDate = allReports[idx - 1]?.scan_date ?? null;
 
-  const week = getISOWeek(date)
-  const year = date.split('-')[0]
+  const week = getISOWeek(date);
+  const year = date.split("-")[0];
 
   const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
+    "@context": "https://schema.org",
+    "@type": "Article",
     headline: `${year} · Hafta ${week} fırsat raporu`,
     datePublished: report.created_at,
     description: report.summary ?? `Opportunity scan report for ${date}`,
-    inLanguage: 'tr',
-  }
+    inLanguage: "tr",
+  };
 
   return (
     <div className="bg-brand-bg text-brand-ink min-h-screen">
@@ -102,16 +105,21 @@ export default async function ReportDetailPage(props: {
 
         {/* Breadcrumb */}
         <nav className="mb-3 font-mono text-[11px] tracking-wider text-brand-ink3">
-          <Link href="/reports" className="hover:text-brand-ink transition-colors">
+          <Link
+            href="/reports"
+            className="hover:text-brand-ink transition-colors"
+          >
             Raporlar
-          </Link>
-          {' '}·{' '}
-          <span>{year} · Hafta {week}</span>
+          </Link>{" "}
+          ·{" "}
+          <span>
+            {year} · Hafta {week}
+          </span>
         </nav>
 
         {/* Page heading */}
         <h1 className="mb-7 font-mono text-4xl font-bold leading-tight tracking-tight md:text-5xl">
-          {year} · Hafta {week}{' '}
+          {year} · Hafta {week}{" "}
           <em className="not-italic text-brand-ink2">fırsat raporu.</em>
         </h1>
 
@@ -123,5 +131,5 @@ export default async function ReportDetailPage(props: {
       </main>
       <SiteFooter />
     </div>
-  )
+  );
 }
