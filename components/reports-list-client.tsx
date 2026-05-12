@@ -173,7 +173,7 @@ export function ReportsListClient({ reports }: { reports: ListReport[] }) {
   return (
     <div>
       {/* Filter chips — yatay kaydırılabilir */}
-      <div className="mb-3 flex gap-2 overflow-x-auto pb-1">
+      <div className="mb-3 flex gap-2 overflow-x-auto pb-2">
         {FILTER_CHIPS.map((chip) => {
           const isActive = activeChip === chip;
           return (

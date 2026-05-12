@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useIntl, FormattedMessage } from "react-intl";
+import { Search } from "lucide-react";
 import type { Opportunity } from "@/lib/schemas";
 
 type FeedSectionProps = {
@@ -58,9 +59,21 @@ export function FeedSection({ opportunities, scanDate }: FeedSectionProps) {
   const [activeChip, setActiveChip] = useState<FilterChip>("all");
   const [search, setSearch] = useState("");
   const intl = useIntl();
+  const searchRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        searchRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, []);
 
   const chipCounts = useMemo(() => {
@@ -111,33 +124,35 @@ export function FeedSection({ opportunities, scanDate }: FeedSectionProps) {
         <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-brand-ink3 mb-4">
           <FormattedMessage id="home.feed.tag" />
         </p>
-        <h2 className="font-serif font-normal text-[clamp(34px,4vw,56px)] leading-[1.02] tracking-[-0.02em] mb-4">
-          <FormattedMessage id="home.feed.h.a" />{" "}
-          <span className="text-brand-ink2">
-            <FormattedMessage id="home.feed.h.b" />
-          </span>
-        </h2>
-        <p className="text-[16px] leading-[1.55] text-brand-ink2 max-w-[600px]">
-          <FormattedMessage id="home.feed.sub" />
-        </p>
+        <div className="md:flex justify-between items-end gap-10">
+          <h2 className="font-serif font-normal text-[clamp(34px,4vw,56px)] leading-[1.02] tracking-[-0.02em] mb-4">
+            <FormattedMessage id="home.feed.h.a" />{" "}
+            <span className="text-brand-ink2">
+              <FormattedMessage id="home.feed.h.b" />
+            </span>
+          </h2>
+          <p className="text-[16px] leading-[1.55] text-brand-ink2 md:max-w-120 text-balance text-justify ">
+            <FormattedMessage id="home.feed.sub" />
+          </p>
+        </div>
       </div>
 
-      {/* Filter row */}
-      <div className="flex flex-wrap gap-2 items-center mb-8">
+      {/* Filter chips — yatay kaydırılabilir */}
+      <div className="mb-3 flex gap-2 overflow-x-auto pb-2">
         {FILTER_CHIPS.map((chip) => {
-          const count = chip === "all" ? chipCounts["all"] : chipCounts[chip];
+          const isActive = activeChip === chip;
           return (
             <button
               key={chip}
               onClick={() => handleChipClick(chip)}
-              className={`inline-flex items-center gap-[6px] px-3 py-1.5 rounded-full font-mono text-[11.5px] border transition-colors duration-150 ${
-                activeChip === chip
-                  ? "bg-brand-ink text-brand-bg border-brand-ink"
+              className={`inline-flex shrink-0 cursor-pointer items-center gap-[6px] rounded-full border px-3 py-1.5 font-mono text-[11.5px] transition-colors duration-150 ${
+                isActive
+                  ? "border-brand-ink bg-brand-ink text-brand-bg"
                   : "border-brand-line-soft text-brand-ink2 hover:border-brand-ink hover:text-brand-ink"
               }`}
             >
               <span
-                className={`w-1.5 h-1.5 rounded-sm ${activeChip === chip ? "bg-brand-accent" : "bg-brand-ink3"}`}
+                className={`size-1.5 ${isActive ? "bg-brand-accent" : "bg-brand-ink3"}`}
               />
               {chip === "all" ? (
                 <FormattedMessage id="home.feed.filter.all" />
@@ -146,38 +161,33 @@ export function FeedSection({ opportunities, scanDate }: FeedSectionProps) {
               ) : (
                 chip
               )}
-              {/* {count != null && count > 0 && (
-                <span
-                  className={`text-[10px] text-center border-l pl-1 border-solid border-[#c9bfa9] ${activeChip === chip ? "text-brand-bg/60" : "text-brand-ink3"}`}
-                >
-                  {count}
-                </span>
-              )} */}
               <span
-                className={`text-[10px] text-center border-l pl-1 border-solid border-[#c9bfa9] ${activeChip === chip ? "text-brand-bg/60" : "text-brand-ink3"}`}
+                className={`border-l border-[#c9bfa9] pl-1 text-[10px] ${isActive ? "text-brand-bg/60" : "text-brand-ink3"}`}
               >
                 264
               </span>
             </button>
           );
         })}
-        <div className="inline-flex items-center gap-2 px-3 py-2 border border-brand-line-soft rounded-full bg-brand-paper ml-auto w-full md:max-w-80">
-          <span className="text-brand-ink3 text-[14px] leading-none select-none">
-            ⌕
-          </span>
-          <input
-            value={search}
-            onChange={(e) => handleSearchChange(e.target.value)}
-            placeholder={intl.formatMessage({
-              id: "home.feed.search.placeholder",
-            })}
-            className="flex-1 bg-transparent font-mono text-[12px] text-brand-ink placeholder:text-brand-ink3 outline-none"
-          />
-          <kbd className="font-mono text-[10px] text-brand-ink3 border border-brand-line-soft rounded px-1.25 py-0.5 select-none">
-            ⌘K
-          </kbd>
-        </div>
       </div>
+
+      {/* Search */}
+      <label className="mb-6 flex w-full items-center gap-2 rounded-full border border-brand-line-soft bg-brand-paper px-3 py-2 sm:w-auto sm:min-w-[280px]">
+        <Search className="size-3.5 shrink-0 text-brand-ink3" />
+        <input
+          ref={searchRef}
+          type="text"
+          value={search}
+          onChange={(e) => handleSearchChange(e.target.value)}
+          placeholder={intl.formatMessage({
+            id: "home.feed.search.placeholder",
+          })}
+          className="min-w-0 flex-1 bg-transparent font-mono text-[12px] text-brand-ink outline-none placeholder:text-brand-ink3"
+        />
+        <kbd className="hidden shrink-0 rounded border border-brand-line-soft px-1.5 py-0.5 font-mono text-[10px] text-brand-ink3 sm:inline">
+          ⌘K
+        </kbd>
+      </label>
 
       {/* Feed grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 border border-brand-line-soft rounded-[14px] overflow-hidden bg-brand-paper">
@@ -233,12 +243,12 @@ export function FeedSection({ opportunities, scanDate }: FeedSectionProps) {
                 </div>
 
                 {/* Title */}
-                <h3 className="font-serif text-[26px] leading-[1.1] tracking-[-0.01em] text-brand-ink">
+                <h3 className="font-serif text-[26px]  leading-[1.1] tracking-[-0.01em] text-brand-ink">
                   {opp.title}
                 </h3>
 
                 {/* What — truncated */}
-                <p className="text-[14px] leading-[1.5] text-brand-ink2 flex-1 line-clamp-3">
+                <p className="text-[14px] leading-[1.5] text-justify  text-brand-ink2 flex-1 line-clamp-3">
                   {what}
                 </p>
 

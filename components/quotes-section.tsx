@@ -40,7 +40,7 @@ export function QuotesSection() {
       </div>
 
       {/* Quotes grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-[18px]">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4.5">
         {QUOTES.map((q) => (
           <div
             key={q.qId}
@@ -52,11 +52,11 @@ export function QuotesSection() {
             >
               &quot;
             </span>
-            <p className="font-serif text-[22px] leading-[1.25] flex-1 text-pretty text-brand-ink">
+            <p className="font-serif text-[22px] text-justify leading-[1.25] flex-1 text-pretty text-brand-ink">
               <FormattedMessage id={q.qId} />
             </p>
             <div className="flex gap-3 items-center border-t border-dashed border-brand-line-soft pt-4">
-              <span className="w-8 h-8 rounded-full bg-brand-ink text-brand-bg grid place-items-center font-mono text-[11px] font-semibold shrink-0">
+              <span className="w-8 h-8 rounded-full bg-brand-ink text-brand-bg grid place-items-center font-mono text-[11px] font-semibold shrink-0 ">
                 {q.initials}
               </span>
               <div className="font-mono text-[11px] leading-[1.4]">
